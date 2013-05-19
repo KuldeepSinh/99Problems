@@ -3,7 +3,7 @@
    [
     last/1, second_last/1, nth/1, total_items/1,
     reverse/1, palindrom/1,
-    flatten/1, compress/1
+    flatten/1, compress/1, pack/1
    ]
   ).
 
@@ -77,10 +77,6 @@ compress(L) ->
 %    it's a recomanded practice for Erlang list processing.
 compress(L, []) ->
     reverse(L);
-% When resultant list is empty, 
-%    add first element of the input list to it, and recurse.
-compress([], [H2|T2]) ->
-    compress([H2], T2);
 
 % When the first element of the resultant list and 
 %    the first element of the input list are equal,
@@ -91,7 +87,31 @@ compress([H1|T1], [H2|T2]) when H1 =:= H2 ->
 % In rest of the cases, 
 %    when the first elements of both lists are NOT equal,
 % Add first element of the input list at the beginning of the resultant list, and recurse.
-compress([H1|T1], [H2|T2]) ->
-    compress([H2] ++ [H1|T1], T2).
+compress(L, [H2|T2]) ->
+    compress([H2] ++ L, T2).
     
 
+%% Problem#9 (Pack consecutive duplicates of list elements into sublists.)
+pack([]) ->
+    [];
+pack(L) ->
+    pack([], L).
+
+% L will be the resultant packed list in the reversed order,
+%   so reverse it before returning.
+pack(L, []) ->
+    reverse(L);
+
+% Since the resultant list will be the list of sub-lists,
+%    its head will be a sub list.
+% In this pattern matching, we are checking  
+%   if the head of the input list can be merged into the head sub-list of the resultant list.
+%   if yes, then add head of the input list into the head sub-list of the resultant list.
+pack([[H1|T1]| T], [H2|T2]) when H1 =:= H2 ->
+    pack([[H2] ++ [H1|T1] | T], T2);
+
+% In rest of the cases,
+%   add make a sub-list of the head element of the input list 
+%   and add this newly created sub-list at the beginning of the resultant list.
+pack(L, [H2|T2]) ->
+    pack([[H2]] ++ L, T2).
