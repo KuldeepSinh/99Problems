@@ -6,7 +6,7 @@
     nth/1,
     total_items/1,
     reverse/1,
-    palindrom/2,
+    palindrom/1,
     flatten/1
    ]
   ).
@@ -42,8 +42,8 @@ reverse([H|T]) ->
     reverse(T) ++ [H].
 
 %% Problem#6 (Check if list is palindrom)
-palindrom(L1, L2) ->
-    L1 =:= reverse(L2).
+palindrom(L1) ->
+    L1 =:= reverse(L1).
 
 %% Problem#7 (Flatten the list)
 flatten([]) ->
@@ -55,7 +55,8 @@ flatten([H|T]) ->
 %% else next pattern will match.
     flatten(H) ++ flatten(T);
 
-%% If H is a single element (NOT a list)
+%% If both of above patterns did not match,
+%% H is a single element (NOT a list) and
 %% following pattern will match.
 flatten(H) ->
     [H].
