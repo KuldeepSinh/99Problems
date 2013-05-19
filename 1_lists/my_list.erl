@@ -3,7 +3,7 @@
    [
     last/1, second_last/1, nth/1, total_items/1,
     reverse/1, palindrom/1,
-    flatten/1, compress/1, pack/1, encode/1
+    flatten/1, compress/1, pack/1, encode/1, encode_modified/1
    ]
   ).
 
@@ -116,19 +116,22 @@ pack(L, [H2|T2]) ->
 encode(L) ->
     encode([], L).
 encode(L, []) ->
-    shorten(L);
+    reverse(L);
 encode([[Count, Char]| T], [H2|T2]) when Char =:= H2 ->
     encode([[Count + 1, Char] | T], T2);
 encode(L, [H2|T2]) ->
     encode([[1, H2]| L], T2).
 
-% If Count =:= 1, remove it from the encoded list.
-shorten(L) ->
-    shorten([], L).
-shorten(L, []) ->
-    L;
-shorten(L, [[Count, Char]| T]) when Count =:= 1 ->
-    shorten([Char] ++ L, T);
-shorten(L, [H|T]) ->
-    shorten([H] ++ L, T).
+%% Problem#11 (Modified run-length encoding.)
+encode_modified(L) ->
+    encode_modified([], encode(L)).
+% L is the resultant list, reverse it.
+encode_modified(L, []) ->
+    reverse(L);
+% If Count =:= 1, remove it from the encoded list, keep only Char.
+encode_modified(L, [[Count, Char]| T]) when Count =:= 1 ->
+    encode_modified([Char] ++ L, T);
+% Else keep [Count, Char]
+encode_modified(L, [H|T]) ->
+    encode_modified([H] ++ L, T).
 
