@@ -1,14 +1,9 @@
 -module(my_list).
 -export(
    [
-    last/1, 
-    second_last/1, 
-    nth/1,
-    total_items/1,
-    reverse/1,
-    palindrom/1,
-    flatten/1,
-    compress/1
+    last/1, second_last/1, nth/1, total_items/1,
+    reverse/1, palindrom/1,
+    flatten/1, compress/1
    ]
   ).
 
@@ -57,15 +52,15 @@ palindrom(L1) ->
 flatten([]) ->
     [];
 
-% It is possible that H is a list, 
-% if such is a case this pattern will match in reccursion 
-% else next pattern will match.
+% If H is a list (NOT a single element), 
+%    same pattern will be called in the next recursive call.
+% Else next pattern will be matched in the next recursive call.
 flatten([H|T]) -> 
     flatten(H) ++ flatten(T);
 
-% If both of above patterns did not match,
-% H is a single element (NOT a list) and
-% following pattern will match.
+% If both of above patterns do not match,
+%    H is a single element (NOT a list)
+%    list of H will be returned, so that it can be added in frot of flatten Tail (T).
 flatten(H) ->
     [H].
 
@@ -78,12 +73,12 @@ compress(L) ->
 
 % L will be the ultimate compressed list.
 % Reverse of L is required to preserve the order of elements,
-% because L will be created by adding elements to its head,
-% it's a recomanded practice for Erlang list processing.
+%    because L will be created by adding elements to its head,
+%    it's a recomanded practice for Erlang list processing.
 compress(L, []) ->
     reverse(L);
 % When resultant list is empty, 
-% add first element of the input list to it, and recurse.
+%    add first element of the input list to it, and recurse.
 compress([], [H2|T2]) ->
     compress([H2], T2);
 
@@ -94,9 +89,8 @@ compress([H1|T1], [H2|T2]) when H1 =:= H2 ->
     compress([H1 | T1], T2);
 
 % In rest of the cases, 
-%    when the first element of the input list are NOT equal,
-% Add first element of the input list at the beginning of the resultant list,
-% and recurse.
+%    when the first elements of both lists are NOT equal,
+% Add first element of the input list at the beginning of the resultant list, and recurse.
 compress([H1|T1], [H2|T2]) ->
     compress([H2] ++ [H1|T1], T2).
     
