@@ -3,7 +3,7 @@
    [
     last/1, second_last/1, nth/1, total_items/1,
     reverse/1, palindrom/1,
-    flatten/1, compress/1, pack/1
+    flatten/1, compress/1, pack/1, encode/1
    ]
   ).
 
@@ -66,8 +66,6 @@ flatten(H) ->
 
 %% =========
 %% Problem#8 (Compress List, remove repeating adjscent elements)
-compress([]) ->
-    [];
 compress(L) ->
     compress([], L).
 
@@ -92,8 +90,6 @@ compress(L, [H2|T2]) ->
     
 
 %% Problem#9 (Pack consecutive duplicates of list elements into sublists.)
-pack([]) ->
-    [];
 pack(L) ->
     pack([], L).
 
@@ -111,7 +107,28 @@ pack([[H1|T1]| T], [H2|T2]) when H1 =:= H2 ->
     pack([[H2] ++ [H1|T1] | T], T2);
 
 % In rest of the cases,
-%   add make a sub-list of the head element of the input list 
+%   make a sub-list of the head element of the input list 
 %   and add this newly created sub-list at the beginning of the resultant list.
 pack(L, [H2|T2]) ->
     pack([[H2]] ++ L, T2).
+
+%% Problem#10 (Run-length encoding of a list.)
+encode(L) ->
+    encode([], L).
+encode(L, []) ->
+    shorten(L);
+encode([[Count, Char]| T], [H2|T2]) when Char =:= H2 ->
+    encode([[Count + 1, Char] | T], T2);
+encode(L, [H2|T2]) ->
+    encode([[1, H2]| L], T2).
+
+% If Count =:= 1, remove it from the encoded list.
+shorten(L) ->
+    shorten([], L).
+shorten(L, []) ->
+    L;
+shorten(L, [[Count, Char]| T]) when Count =:= 1 ->
+    shorten([Char] ++ L, T);
+shorten(L, [H|T]) ->
+    shorten([H] ++ L, T).
+
