@@ -4,7 +4,7 @@
     last/1, second_last/1, nth/1, total_items/1,
     reverse/1, palindrom/1,
     flatten/1, compress/1, pack/1, encode/1, encode_modified/1, decode/1,
-    clone_element/2
+    clone_element/2, drop_element/2
    ]
   ).
 
@@ -152,7 +152,7 @@ decode(L, [H|T]) ->
 
 % Expand sub-list while uncopressing.
 expand(L, [Count, Element]) when Count > 0 ->
-    expand([Element] ++ L, [Count -1, Element]);
+    expand([Element] ++ L, [Count - 1, Element]);
 expand(L, _) ->
     L.
 
@@ -164,3 +164,12 @@ clone_element(L, [], _) ->
     reverse(L);
 clone_element(L, [H|T], N) ->
     clone_element(expand(L, [N, H]), T, N).
+
+%% Problem#16 (Drop Nth element from the list)
+drop_element(L, N) ->
+    drop_element([], L, N).
+drop_element(L, [H|T], N) when N > 1 ->
+    drop_element([H] ++ L, T, N-1);
+drop_element(L, [_|T], 1) ->
+    reverse(L) ++ T.
+    
