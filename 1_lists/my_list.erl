@@ -3,7 +3,7 @@
    [
     last/1, second_last/1, nth/1, total_items/1,
     reverse/1, palindrom/1,
-    flatten/1, compress/1, pack/1, encode/1, encode_modified/1
+    flatten/1, compress/1, pack/1, encode/1, encode_modified/1, decode/1
    ]
   ).
 
@@ -117,21 +117,40 @@ encode(L) ->
     encode([], L).
 encode(L, []) ->
     reverse(L);
-encode([[Count, Char]| T], [H2|T2]) when Char =:= H2 ->
-    encode([[Count + 1, Char] | T], T2);
+encode([[Count, Element]| T], [H2|T2]) when Element =:= H2 ->
+    encode([[Count + 1, Element] | T], T2);
 encode(L, [H2|T2]) ->
     encode([[1, H2]| L], T2).
 
-%% Problem#11 (Modified run-length encoding.)
+%% Problem#13 (Modified run-length encoding.)
+%% Outcome of both Problem#11 and Problem#13 is same, 
+%%   so Problem#11 is not solved.
 encode_modified(L) ->
     encode_modified([], encode(L)).
 % L is the resultant list, reverse it.
 encode_modified(L, []) ->
     reverse(L);
-% If Count =:= 1, remove it from the encoded list, keep only Char.
-encode_modified(L, [[Count, Char]| T]) when Count =:= 1 ->
-    encode_modified([Char] ++ L, T);
-% Else keep [Count, Char]
+% If Count =:= 1, remove it from the encoded list, keep only Element.
+encode_modified(L, [[Count, Element]| T]) when Count =:= 1 ->
+    encode_modified([Element] ++ L, T);
+% Else keep [Count, Element]
 encode_modified(L, [H|T]) ->
     encode_modified([H] ++ L, T).
 
+
+%% Problem#12 (decode list)
+decode(L) ->
+    decode([], L).
+
+decode(L, []) ->
+    reverse(L);
+decode(L, [[Count| Element] | T]) ->
+    decode(expand(L, [Count | Element]),T);    
+decode(L, [H|T]) ->
+    decode([H] ++ L, T).
+
+% Expand sub-list while uncopressing.
+expand(L, [Count, Element]) when Count > 0 ->
+    expand([Element] ++ L, [Count -1, Element]);
+expand(L, _) ->
+    L.
