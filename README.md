@@ -8,5 +8,5 @@ Solution (written in Erlang) to 99 Problems given on "https://sites.google.com/s
 
 Notes:
 
-1. "Let it crash" is followed (No unnecessary error checking).
+1. "Let it crash" is followed (No unnecessary error handling).
 2. "First - make it work" (Optimization is continuous).

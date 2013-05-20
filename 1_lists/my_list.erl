@@ -4,7 +4,7 @@
     last/1, second_last/1, nth/1, total_items/1,
     reverse/1, palindrom/1,
     flatten/1, compress/1, pack/1, encode/1, encode_modified/1, decode/1,
-    clone_element/2, drop_nth/2, drop_every_nth/2,
+    clone_element/2, drop_nth/2, drop_every_nth/2, insert/3,
     split/2, slice/3, rotate/2
    ]
   ).
@@ -228,3 +228,11 @@ drop_nth(L, [H|T], N) when N > 1 ->
 drop_nth(L, [_|T], 1) ->
     reverse(L) ++ T.
 
+%% =========
+%% Problem#21 (Insert element at Nth position)
+insert(L, Element, N) ->
+    insert([], L, Element, N).
+insert(L, [H|T], Element, N) when N > 1 ->
+    insert([H] ++ L, T, Element, N -1);
+insert(L1, L2, Element, 1) ->
+    reverse([Element] ++ L1) ++ L2.
