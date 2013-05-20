@@ -5,7 +5,8 @@
     reverse/1, palindrom/1,
     flatten/1, compress/1, pack/1, encode/1, encode_modified/1, decode/1,
     clone_element/2, drop_nth/2, drop_every_nth/2, insert/3,
-    split/2, slice/3, rotate/2
+    split/2, slice/3, rotate/2,
+    create_range/2
    ]
   ).
 
@@ -236,3 +237,15 @@ insert(L, [H|T], Element, N) when N > 1 ->
     insert([H] ++ L, T, Element, N -1);
 insert(L1, L2, Element, 1) ->
     reverse([Element] ++ L1) ++ L2.
+
+%% =========
+%% Problem#22 (Create a list between range of integers (From-To))
+create_range(From, To) ->
+    create_range([], From, To).
+create_range(L, From, To) when From =< To ->
+    create_range([From] ++ L, From + 1, To);
+create_range(L, From, To) when From > To ->
+    reverse(L).
+
+    
+    
