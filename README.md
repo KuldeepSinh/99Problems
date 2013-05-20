@@ -9,4 +9,4 @@ Solution (written in Erlang) to 99 Problems given on "https://sites.google.com/s
 Notes:
 
 1. "Let it crash" is followed (No unnecessary error checking).
-2. "First - make it work" (Optimization should be the continuous process).
+2. "First - make it work" (Optimization is continuous).
