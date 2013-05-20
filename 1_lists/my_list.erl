@@ -1,12 +1,12 @@
 -module(my_list).
 -export(
    [
-    last/1, second_last/1, nth/1, total_items/1,
+    last/1, second_last/1, nth/2, total_items/1,
     reverse/1, palindrom/1,
     flatten/1, compress/1, pack/1, encode/1, encode_modified/1, decode/1,
     clone_element/2, drop_nth/2, drop_every_nth/2, insert/3,
     split/2, slice/3, rotate/2,
-    create_range/2
+    create_range/2, create_random_sublist/2
    ]
   ).
 
@@ -26,10 +26,10 @@ second_last([_|T]) ->
 
 %% =========
 %% Problem#3 (nth item)
-nth({1, [H|_]}) -> 
+nth([H|_], 1) -> 
     H;
-nth({N, [_|T]}) -> 
-    nth({N-1, T}).
+nth([_|T], N) -> 
+    nth(T, N -1).
 
 %% =========
 %% Problem#4 (Total items)
@@ -247,5 +247,13 @@ create_range(L, From, To) when From =< To ->
 create_range(L, From, To) when From > To ->
     reverse(L).
 
-    
+%% =========
+%% Problem#23 (Create a sub-list by selecting random elements of the list)
+create_random_sublist(L, Count) ->
+    Total = total_items(L),
+    create_random_sublist([], L, Count, Total).
+create_random_sublist(L1, L2, Count, Total) when Count > 0 ->
+    create_random_sublist([nth(L2, random:uniform(Total))] ++  L1, L2, Count - 1, Total);
+create_random_sublist(L1, _, 0, _)  ->
+    L1.
     
