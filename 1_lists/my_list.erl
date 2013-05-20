@@ -3,7 +3,8 @@
    [
     last/1, second_last/1, nth/1, total_items/1,
     reverse/1, palindrom/1,
-    flatten/1, compress/1, pack/1, encode/1, encode_modified/1, decode/1
+    flatten/1, compress/1, pack/1, encode/1, encode_modified/1, decode/1,
+    clone_element/2
    ]
   ).
 
@@ -154,3 +155,12 @@ expand(L, [Count, Element]) when Count > 0 ->
     expand([Element] ++ L, [Count -1, Element]);
 expand(L, _) ->
     L.
+
+%% Problem#14 (Clone each element of the list 2 times.)
+%% Problem#15 (Clone each element of the list N times.)
+clone_element(L, N) ->
+    clone_element([], L , N).
+clone_element(L, [], _) ->
+    reverse(L);
+clone_element(L, [H|T], N) ->
+    clone_element(expand(L, [N, H]), T, N).
