@@ -4,7 +4,8 @@
     last/1, second_last/1, nth/1, total_items/1,
     reverse/1, palindrom/1,
     flatten/1, compress/1, pack/1, encode/1, encode_modified/1, decode/1,
-    clone_element/2, drop_element/2
+    clone_element/2, drop_element/2,
+    split_list/2
    ]
   ).
 
@@ -173,3 +174,10 @@ drop_element(L, [H|T], N) when N > 1 ->
 drop_element(L, [_|T], 1) ->
     reverse(L) ++ T.
     
+%% Problem#17 (Split list after the Nth element)
+split_list(L, N) ->
+    split_list([], L, N).
+split_list(L, [H|T], N) when N > 0 ->
+    split_list([H] ++ L, T, N - 1);
+split_list(L1, L2, 0) ->
+    {reverse(L1), L2}.
