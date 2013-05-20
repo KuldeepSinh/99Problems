@@ -5,7 +5,7 @@
     reverse/1, palindrom/1,
     flatten/1, compress/1, pack/1, encode/1, encode_modified/1, decode/1,
     clone_element/2, drop_nth/2, drop_every_nth/2,
-    split/2, slice/3
+    split/2, slice/3, rotate/2
    ]
   ).
 
@@ -90,7 +90,7 @@ compress([H1|T1], [H2|T2]) when H1 =:= H2 ->
 compress(L, [H2|T2]) ->
     compress([H2] ++ L, T2).
     
-
+%% =========
 %% Problem#9 (Pack consecutive duplicates of list elements into sublists.)
 pack(L) ->
     pack([], L).
@@ -114,6 +114,7 @@ pack([[H1|T1]| T], [H2|T2]) when H1 =:= H2 ->
 pack(L, [H2|T2]) ->
     pack([[H2]] ++ L, T2).
 
+%% =========
 %% Problem#10 (Run-length encoding of a list.)
 encode(L) ->
     encode([], L).
@@ -124,6 +125,7 @@ encode([[Count, Element]| T], [H2|T2]) when Element =:= H2 ->
 encode(L, [H2|T2]) ->
     encode([[1, H2]| L], T2).
 
+%% =========
 %% Problem#13 (Modified run-length encoding.)
 %% Outcome of both Problem#11 and Problem#13 is same, 
 %%   so Problem#11 is not solved.
@@ -139,11 +141,10 @@ encode_modified(L, [[Count, Element]| T]) when Count =:= 1 ->
 encode_modified(L, [H|T]) ->
     encode_modified([H] ++ L, T).
 
-
+%% =========
 %% Problem#12 (decode list)
 decode(L) ->
     decode([], L).
-
 decode(L, []) ->
     reverse(L);
 decode(L, [[Count| Element] | T]) ->
@@ -157,6 +158,7 @@ expand(L, [Count, Element]) when Count > 0 ->
 expand(L, _) ->
     L.
 
+%% =========
 %% Problem#14 (Clone each element of the list 2 times.)
 %% Problem#15 (Clone each element of the list N times.)
 clone_element(L, N) ->
@@ -166,6 +168,7 @@ clone_element(L, [], _) ->
 clone_element(L, [H|T], N) ->
     clone_element(expand(L, [N, H]), T, N).
 
+%% =========
 %% Problem#16 (Drop every Nth element from the list)
 drop_every_nth(L, N) ->
     drop_every_nth([], L, N, N).
@@ -176,8 +179,7 @@ drop_every_nth(L, [H|T], N, M) when M > 1 ->
 drop_every_nth(L, [_|T], N, 1) ->
     drop_every_nth(L, T, N, N).
 
-
-    
+%% =========    
 %% Problem#17 (Split list after the Nth element)
 split(L, N) ->
     split([], L, N).
@@ -186,6 +188,7 @@ split(L, [H|T], N) when N > 0 ->
 split(L1, L2, 0) ->
     {reverse(L1), L2}.
 
+%% =========
 %% Problem#18 (Slice list between positions)
 slice(L, From, To) ->
     slice([], L, From, To).
@@ -196,8 +199,27 @@ slice(L, [_|T], From, To) when From > 1 ->
 slice(L, [H|T], 1, To) when To > 0 ->
     slice([H] ++ L, T, 1, To -1).
 
+%% =========
+%% Problem#19 (Rotate List)
+rotate(L, N) when N > 0 ->
+    rotate([], L, N, positive);
+rotate(L, N) when N < 0 ->
+    rotate([], L, N, negative);
+rotate(L, _) ->
+    L.
 
+rotate(L, [H|T], N, positive)  when N > 0 ->
+    rotate([H] ++ L, T, N-1, positive);
+rotate(L1, L2, N, negative) when N < 0 ->
+    rotate(L1, reverse(L2), abs(N), negative);
+rotate(L, [H|T], N, negative) when N > 0 ->
+    rotate([H] ++ L, T, N-1, negative);
+rotate(L1, L2, 0, positive) ->
+    L2 ++ reverse(L1);
+rotate(L1, L2, 0, negative) ->
+    L1 ++ reverse(L2).
 
+%% =========
 %% Problem#20 (Drop Nth element from the list)
 drop_nth(L, N) ->
     drop_nth([], L, N).
