@@ -6,7 +6,7 @@
     flatten/1, compress/1, pack/1, encode/1, encode_modified/1, decode/1,
     clone_element/2, drop_nth/2, drop_every_nth/2, insert/3,
     split/2, slice/3, rotate/2,
-    create_range/2, create_random_sublist/2
+    create_range/2, create_random_sublist/2, draw_random_list/2
    ]
   ).
 
@@ -248,12 +248,21 @@ create_range(L, From, To) when From > To ->
     reverse(L).
 
 %% =========
-%% Problem#23 (Create a sub-list by selecting random elements of the list)
+%% Problem#23 (Extract a given number of randomly selected elements from a list.)
 create_random_sublist(L, Count) ->
-    Total = total_items(L),
-    create_random_sublist([], L, Count, Total).
-create_random_sublist(L1, L2, Count, Total) when Count > 0 ->
-    create_random_sublist([nth(L2, random:uniform(Total))] ++  L1, L2, Count - 1, Total);
-create_random_sublist(L1, _, 0, _)  ->
+    create_random_sublist([], L, total_items(L), Count).
+create_random_sublist(L1, L2, Total, Count) when Count > 0 ->
+    create_random_sublist([nth(L2, random:uniform(Total))] ++  L1, L2, Total, Count - 1);
+create_random_sublist(L1, _, _, 0)  ->
     L1.
+
+%% =========
+%% Problem#24 (Lotto: Draw N different random numbers from the set 1..M.)
+draw_random_list(Count, Max) ->
+    draw_random_list([], Count, Max).
+draw_random_list(L, Count, Max) when Count > 0 ->
+    draw_random_list([random:uniform(Max)] ++ L, Count - 1, Max);
+draw_random_list(L, 0, _) ->
+    L.
+
     
