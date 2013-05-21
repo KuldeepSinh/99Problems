@@ -1,12 +1,12 @@
 -module(my_list).
 -export(
    [
-    last/1, second_last/1, nth/2, total_items/1,
+    last/1, second_last/1, nth/2, total_items/1, remove_nth/2,
     reverse/1, palindrom/1,
     flatten/1, compress/1, pack/1, encode/1, encode_modified/1, decode/1,
     clone_element/2, drop_nth/2, drop_every_nth/2, insert/3,
     split/2, slice/3, rotate/2,
-    create_range/2, create_random_sublist/2, draw_random_list/2
+    create_range/2, create_random_sublist/2, draw_random_list/2, random_permute/1
    ]
   ).
 
@@ -37,6 +37,15 @@ total_items([]) ->
     0;
 total_items([_| T]) ->
     1 + total_items(T).
+
+%% Not in the Problem list, but helpful function.
+remove_nth(L, N) ->
+    remove_nth([], L, N).
+remove_nth(L1, [H|T], N) when N > 1 ->
+    remove_nth([H] ++ L1, T, N - 1); 
+remove_nth(L1, [H|T], 1) ->
+    reverse(L1) ++ T.
+
 
 %% =========
 %% Problem#5 (Reverse list)
@@ -265,4 +274,12 @@ draw_random_list(L, Count, Max) when Count > 0 ->
 draw_random_list(L, 0, _) ->
     L.
 
-    
+%% =========
+%% Problem#25 (Lotto: Draw N different random numbers from the set 1..M.)
+random_permute(L) ->
+    random_permute([], L).
+random_permute(L1, []) ->
+    L1;
+random_permute(L1, L2) -> 
+    N = random:uniform(total_items(L2)),
+    random_permute([nth(L2, N)] ++ L1, remove_nth(L2, N)).
