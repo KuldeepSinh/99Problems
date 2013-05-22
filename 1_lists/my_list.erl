@@ -1,25 +1,16 @@
 -module(my_list).
--export(
-   [
-    last/1, second_last/1, nth/2, total_items/1, remove_nth/2,
-    reverse/1, palindrom/1,
-    flatten/1, compress/1, pack/1, encode/1, encode_modified/1, decode/1,
-    clone_element/2, drop_nth/2, drop_every_nth/2, insert/3,
-    split/2, slice/3, rotate/2,
-    create_range/2, create_random_sublist/2, draw_random_list/2, random_permute/1
-   ]
-  ).
+-compile(export_all).
 
 %% =========
 %% Problem#1 (Last Item)
-last([H|T]) when T =:= []->
+last([H|[]]) ->
     H;
 last([_|T]) ->
     last(T).
 
 %% =========
 %% Problem#2 (Last but one item)
-second_last([H1, _|T]) when T =:= []->
+second_last([H1, _|[]]) ->
     H1;
 second_last([_|T]) ->
     second_last(T).
@@ -33,17 +24,19 @@ nth([_|T], N) ->
 
 %% =========
 %% Problem#4 (Total items)
-total_items([]) ->
+list_length([]) ->
     0;
-total_items([_| T]) ->
-    1 + total_items(T).
+list_length([_| T]) ->
+    1 + list_length(T).
 
 %% Not in the Problem list, but helpful function.
 remove_nth(L, N) ->
     remove_nth([], L, N).
+% Find Nth element one by one.
 remove_nth(L1, [H|T], N) when N > 1 ->
     remove_nth([H] ++ L1, T, N - 1); 
-remove_nth(L1, [H|T], 1) ->
+% When Nth element is reached, remove it/don't include it.
+remove_nth(L1, [_|T], 1) ->
     reverse(L1) ++ T.
 
 
@@ -91,8 +84,8 @@ compress(L, []) ->
 % When the first element of the resultant list and 
 %    the first element of the input list are equal,
 % Discard it from the list and recurse.
-compress([H1|T1], [H2|T2]) when H1 =:= H2 ->
-    compress([H1 | T1], T2);
+compress([H|T1], [H|T2]) ->
+    compress([H | T1], T2);
 
 % In rest of the cases, 
 %    when the first elements of both lists are NOT equal,
@@ -115,8 +108,8 @@ pack(L, []) ->
 % In this pattern matching, we are checking  
 %   if the head of the input list can be merged into the head sub-list of the resultant list.
 %   if yes, then add head of the input list into the head sub-list of the resultant list.
-pack([[H1|T1]| T], [H2|T2]) when H1 =:= H2 ->
-    pack([[H2] ++ [H1|T1] | T], T2);
+pack([[H|T1]| T], [H|T2]) ->
+    pack([[H] ++ [H|T1] | T], T2);
 
 % In rest of the cases,
 %   make a sub-list of the head element of the input list 
@@ -130,8 +123,8 @@ encode(L) ->
     encode([], L).
 encode(L, []) ->
     reverse(L);
-encode([[Count, Element]| T], [H2|T2]) when Element =:= H2 ->
-    encode([[Count + 1, Element] | T], T2);
+encode([[Count, H]| T1], [H|T2]) ->
+    encode([[Count + 1, H] | T1], T2);
 encode(L, [H2|T2]) ->
     encode([[1, H2]| L], T2).
 
@@ -145,7 +138,7 @@ encode_modified(L) ->
 encode_modified(L, []) ->
     reverse(L);
 % If Count =:= 1, remove it from the encoded list, keep only Element.
-encode_modified(L, [[Count, Element]| T]) when Count =:= 1 ->
+encode_modified(L, [[1, Element]| T]) ->
     encode_modified([Element] ++ L, T);
 % Else keep [Count, Element]
 encode_modified(L, [H|T]) ->
@@ -259,7 +252,7 @@ create_range(L, From, To) when From > To ->
 %% =========
 %% Problem#23 (Extract a given number of randomly selected elements from a list.)
 create_random_sublist(L, Count) ->
-    create_random_sublist([], L, total_items(L), Count).
+    create_random_sublist([], L, list_length(L), Count).
 create_random_sublist(L1, L2, Total, Count) when Count > 0 ->
     create_random_sublist([nth(L2, random:uniform(Total))] ++  L1, L2, Total, Count - 1);
 create_random_sublist(L1, _, _, 0)  ->
@@ -275,11 +268,42 @@ draw_random_list(L, 0, _) ->
     L.
 
 %% =========
-%% Problem#25 (Lotto: Draw N different random numbers from the set 1..M.)
+%% Problem#25 (Generate a random permutation of the elements of a list.)
 random_permute(L) ->
     random_permute([], L).
 random_permute(L1, []) ->
     L1;
 random_permute(L1, L2) -> 
-    N = random:uniform(total_items(L2)),
+    %Find length (list_length) of the list,
+    %   based on that generate a random (nth) position.
+    N = random:uniform(list_length(L2)),
+    %Select the nth element from the list, to construct a new (resultant) list.
+    %Remove nth element from the input list. 
     random_permute([nth(L2, N)] ++ L1, remove_nth(L2, N)).
+
+%% =========
+%% Problem#26 (Generate the combinations of K distinct objects chosen from the N elements of a list.)
+combination(L, N) when N > 0->    
+    combination(create_comb([{[], L}], []), N-1);
+combination([{CL, RL} | T], N) when N > 0 -> 
+    combination(create_comb([{CL, RL}|T], []), N-1);
+combination(L, 0) ->
+    L.
+
+create_comb([], L2) ->
+    L2;
+create_comb([{ComLst, RmnLst} | []], L2) ->
+    %L2;
+    create_comb({ComLst, RmnLst}, L2, list_length(RmnLst));
+create_comb([{ComLst, RmnLst} | T], L2) ->
+    create_comb(T, create_comb({ComLst, RmnLst}, L2, list_length(RmnLst)) ++ L2).
+
+create_comb({ComLst, RmnLst}, L2, N) when N > 0 ->  
+    CL = [nth(RmnLst, N)] ++ ComLst,
+    RL = remove_nth(RmnLst, N),    
+    create_comb({ComLst, RmnLst}, [{CL, RL}] ++ L2, N-1);
+create_comb(_L1, L2, 0) ->
+    L2.
+
+
+
