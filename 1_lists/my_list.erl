@@ -2,28 +2,28 @@
 -compile(export_all).
 
 %% =========
-%% Problem#1 (Last Item)
+%% Problem#1 (Find the last element of a list.)
 last([H|[]]) ->
     H;
 last([_|T]) ->
     last(T).
 
 %% =========
-%% Problem#2 (Last but one item)
+%% Problem#2 (Find the last but one element of a list.)
 second_last([H1, _|[]]) ->
     H1;
 second_last([_|T]) ->
     second_last(T).
 
 %% =========
-%% Problem#3 (nth item)
+%% Problem#3 (Find the N'th element of a list.)
 nth([H|_], 1) -> 
     H;
 nth([_|T], N) -> 
     nth(T, N -1).
 
 %% =========
-%% Problem#4 (Total items)
+%% Problem#4 (Find the number of elements of a list.)
 list_length([]) ->
     0;
 list_length([_| T]) ->
@@ -41,7 +41,7 @@ remove_nth(L1, [_|T], 1) ->
 
 
 %% =========
-%% Problem#5 (Reverse list)
+%% Problem#5 (Reverse a list)
 reverse([]) ->
     [];
 reverse([H|T]) ->
@@ -53,24 +53,22 @@ palindrom(L1) ->
     L1 =:= reverse(L1).
 
 %% =========
-%% Problem#7 (Flatten the list)
+%% Problem#7 (Flatten a nested list structure.)
 flatten([]) ->
     [];
 
 % If H is a list (NOT a single element), 
 %    same pattern will be called in the next recursive call.
-% Else next pattern will be matched in the next recursive call.
 flatten([H|T]) -> 
     flatten(H) ++ flatten(T);
 
-% If both of above patterns do not match,
 %    H is a single element (NOT a list)
 %    list of H will be returned, so that it can be added in frot of flatten Tail (T).
 flatten(H) ->
     [H].
 
 %% =========
-%% Problem#8 (Compress List, remove repeating adjscent elements)
+%% Problem#8 (Eliminate consecutive duplicates of list elements.)
 compress(L) ->
     compress([], L).
 
@@ -145,7 +143,7 @@ encode_modified(L, [H|T]) ->
     encode_modified([H] ++ L, T).
 
 %% =========
-%% Problem#12 (decode list)
+%% Problem#12 (Decode a run-length encoded list.)
 decode(L) ->
     decode([], L).
 decode(L, []) ->
@@ -162,8 +160,8 @@ expand(L, _) ->
     L.
 
 %% =========
-%% Problem#14 (Clone each element of the list 2 times.)
-%% Problem#15 (Clone each element of the list N times.)
+%% Problem#14 (Duplicate the elements of a list.)
+%% Problem#15 (Duplicate the elements of a list a given number of times.)
 clone_element(L, N) ->
     clone_element([], L , N).
 clone_element(L, [], _) ->
@@ -175,35 +173,40 @@ clone_element(L, [H|T], N) ->
 %% Problem#16 (Drop every Nth element from the list)
 drop_every_nth(L, N) ->
     drop_every_nth([], L, N, N).
+% Once the input list is empty, we will have resultant list ready.
 drop_every_nth(L, [], _, _)  ->
     reverse(L);
+% N in below function remains constant
+% M reduces by 1, so that once it values reaches to 1, we will have our Nth element.
 drop_every_nth(L, [H|T], N, M) when M > 1 ->
     drop_every_nth([H] ++ L, T, N, M-1);
+% When M = 1, we reched Nth element of the list.
+% We discard it, and then call (recurse) the funtion to find next Nth element, if any.
 drop_every_nth(L, [_|T], N, 1) ->
     drop_every_nth(L, T, N, N).
 
 %% =========    
-%% Problem#17 (Split list after the Nth element)
+%% Problem#17 (Split a list into two parts; the length of the first part is given.)
 split(L, N) ->
     split([], L, N).
-split(L, [H|T], N) when N > 0 ->
-    split([H] ++ L, T, N - 1);
 split(L1, L2, 0) ->
-    {reverse(L1), L2}.
+    {reverse(L1), L2};
+split(L, [H|T], N) ->
+    split([H] ++ L, T, N - 1).
 
 %% =========
-%% Problem#18 (Slice list between positions)
+%% Problem#18 (Extract a slice from a list.)
 slice(L, From, To) ->
     slice([], L, From, To).
 slice(L, _, 1, 0) ->
     reverse(L);
-slice(L, [_|T], From, To) when From > 1 ->
-    slice(L, T, From - 1, To -1);
-slice(L, [H|T], 1, To) when To > 0 ->
-    slice([H] ++ L, T, 1, To -1).
+slice(L, [H|T], 1, To) ->
+    slice([H] ++ L, T, 1, To -1);
+slice(L, [_|T], From, To)  ->
+    slice(L, T, From - 1, To -1).
 
 %% =========
-%% Problem#19 (Rotate List)
+%% Problem#19 (Rotate a list N places to the left.)
 rotate(L, N) when N > 0 ->
     rotate([], L, N, positive);
 rotate(L, N) when N < 0 ->
@@ -223,49 +226,49 @@ rotate(L1, L2, 0, negative) ->
     L1 ++ reverse(L2).
 
 %% =========
-%% Problem#20 (Drop Nth element from the list)
+%% Problem#20 (Remove the K'th element from a list.)
 drop_nth(L, N) ->
     drop_nth([], L, N).
-drop_nth(L, [H|T], N) when N > 1 ->
-    drop_nth([H] ++ L, T, N-1);
 drop_nth(L, [_|T], 1) ->
-    reverse(L) ++ T.
+    reverse(L) ++ T;
+drop_nth(L, [H|T], N) ->
+    drop_nth([H] ++ L, T, N-1).
 
 %% =========
 %% Problem#21 (Insert element at Nth position)
 insert(L, Element, N) ->
     insert([], L, Element, N).
-insert(L, [H|T], Element, N) when N > 1 ->
-    insert([H] ++ L, T, Element, N -1);
 insert(L1, L2, Element, 1) ->
-    reverse([Element] ++ L1) ++ L2.
+    reverse([Element] ++ L1) ++ L2;
+insert(L, [H|T], Element, N)  ->
+    insert([H] ++ L, T, Element, N -1).
 
 %% =========
 %% Problem#22 (Create a list between range of integers (From-To))
 create_range(From, To) ->
     create_range([], From, To).
-create_range(L, From, To) when From =< To ->
-    create_range([From] ++ L, From + 1, To);
-create_range(L, From, To) when From > To ->
-    reverse(L).
+create_range(L, From, From) ->
+    reverse([From] ++ L);
+create_range(L, From, To) ->
+    create_range([From] ++ L, From + 1, To).
 
 %% =========
 %% Problem#23 (Extract a given number of randomly selected elements from a list.)
 create_random_sublist(L, Count) ->
     create_random_sublist([], L, list_length(L), Count).
-create_random_sublist(L1, L2, Total, Count) when Count > 0 ->
-    create_random_sublist([nth(L2, random:uniform(Total))] ++  L1, L2, Total, Count - 1);
 create_random_sublist(L1, _, _, 0)  ->
-    L1.
+    L1;
+create_random_sublist(L1, L2, Total, Count) ->
+    create_random_sublist([nth(L2, random:uniform(Total))] ++  L1, L2, Total, Count - 1).
 
 %% =========
 %% Problem#24 (Lotto: Draw N different random numbers from the set 1..M.)
 draw_random_list(Count, Max) ->
     draw_random_list([], Count, Max).
-draw_random_list(L, Count, Max) when Count > 0 ->
-    draw_random_list([random:uniform(Max)] ++ L, Count - 1, Max);
 draw_random_list(L, 0, _) ->
-    L.
+    L;
+draw_random_list(L, Count, Max) ->
+    draw_random_list([random:uniform(Max)] ++ L, Count - 1, Max).
 
 %% =========
 %% Problem#25 (Generate a random permutation of the elements of a list.)
