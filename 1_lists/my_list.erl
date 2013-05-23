@@ -283,27 +283,31 @@ random_permute(L1, L2) ->
 
 %% =========
 %% Problem#26 (Generate the combinations of K distinct objects chosen from the N elements of a list.)
-combination(L, N) when N > 0->    
-    combination(create_comb([{[], L}], []), N-1);
-combination([{CL, RL} | T], N) when N > 0 -> 
-    combination(create_comb([{CL, RL}|T], []), N-1);
-combination(L, 0) ->
-    L.
+%combination(L, N) when N > 0->    
+%    combination(create_comb([{[], L}], []), N-1);
+%combination([{CL, RL} | T], N) when N > 0 -> 
+%    combination(create_comb([{CL, RL}|T], []), N-1);
+%combination(L, 0) ->
+%    L.
+
+
 
 create_comb([], L2) ->
-    L2;
-create_comb([{ComLst, RmnLst} | []], L2) ->
-    %L2;
-    create_comb({ComLst, RmnLst}, L2, list_length(RmnLst));
+    reverse(L2);
 create_comb([{ComLst, RmnLst} | T], L2) ->
-    create_comb(T, create_comb({ComLst, RmnLst}, L2, list_length(RmnLst)) ++ L2).
+    create_comb(T, create_comb({ComLst, RmnLst}) ++ L2).
 
+create_comb({ComLst, RmnLst}) ->
+    create_comb({ComLst, RmnLst}, [], list_length(RmnLst)).
 create_comb({ComLst, RmnLst}, L2, N) when N > 0 ->  
     CL = [nth(RmnLst, N)] ++ ComLst,
     RL = remove_nth(RmnLst, N),    
     create_comb({ComLst, RmnLst}, [{CL, RL}] ++ L2, N-1);
+create_comb(L1, [], 0) ->
+    L1;
 create_comb(_L1, L2, 0) ->
     L2.
+
 
 
 
