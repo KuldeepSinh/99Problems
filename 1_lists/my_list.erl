@@ -32,13 +32,12 @@ list_length([_| T]) ->
 %% Not in the Problem list, but helpful function.
 remove_nth(L, N) ->
     remove_nth([], L, N).
-% Find Nth element one by one.
-remove_nth(L1, [H|T], N) when N > 1 ->
-    remove_nth([H] ++ L1, T, N - 1); 
 % When Nth element is reached, remove it/don't include it.
 remove_nth(L1, [_|T], 1) ->
-    reverse(L1) ++ T.
-
+    reverse(L1) ++ T;
+% Find Nth element one by one.
+remove_nth(L1, [H|T], N) ->
+    remove_nth([H] ++ L1, T, N - 1).
 
 %% =========
 %% Problem#5 (Reverse a list)
