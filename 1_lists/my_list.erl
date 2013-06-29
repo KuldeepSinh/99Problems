@@ -153,10 +153,10 @@ decode(L, [H|T]) ->
     decode([H] ++ L, T).
 
 % Expand sub-list while uncopressing.
-expand(L, [Count, Element]) when Count > 0 ->
-    expand([Element] ++ L, [Count - 1, Element]);
-expand(L, _) ->
-    L.
+expand(L, [0, _]) ->
+    L;
+expand(L, [Count, Element])  ->
+    expand([Element] ++ L, [Count - 1, Element]).
 
 %% =========
 %% Problem#14 (Duplicate the elements of a list.)
