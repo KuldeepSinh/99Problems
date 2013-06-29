@@ -175,14 +175,14 @@ drop_every_nth(L, N) ->
 % Once the input list is empty, we will have resultant list ready.
 drop_every_nth(L, [], _, _)  ->
     reverse(L);
-% N in below function remains constant
-% M reduces by 1, so that once it values reaches to 1, we will have our Nth element.
-drop_every_nth(L, [H|T], N, M) when M > 1 ->
-    drop_every_nth([H] ++ L, T, N, M-1);
 % When M = 1, we reched Nth element of the list.
 % We discard it, and then call (recurse) the funtion to find next Nth element, if any.
 drop_every_nth(L, [_|T], N, 1) ->
-    drop_every_nth(L, T, N, N).
+    drop_every_nth(L, T, N, N);
+% N in below function remains constant
+% M reduces by 1, so that once it values reaches to 1, we will have our Nth element.
+drop_every_nth(L, [H|T], N, M) ->
+    drop_every_nth([H] ++ L, T, N, M-1).
 
 %% =========    
 %% Problem#17 (Split a list into two parts; the length of the first part is given.)
