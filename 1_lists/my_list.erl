@@ -209,20 +209,16 @@ slice(L, [_|T], From, To)  ->
 rotate(L, N) when N > 0 ->
     rotate([], L, N, positive);
 rotate(L, N) when N < 0 ->
-    rotate([], L, N, negative);
+    rotate([], reverse(L), abs(N), negative);
 rotate(L, _) ->
     L.
 
-rotate(L, [H|T], N, positive)  when N > 0 ->
-    rotate([H] ++ L, T, N-1, positive);
-rotate(L1, L2, N, negative) when N < 0 ->
-    rotate(L1, reverse(L2), abs(N), negative);
-rotate(L, [H|T], N, negative) when N > 0 ->
-    rotate([H] ++ L, T, N-1, negative);
 rotate(L1, L2, 0, positive) ->
     L2 ++ reverse(L1);
 rotate(L1, L2, 0, negative) ->
-    L1 ++ reverse(L2).
+    L1 ++ reverse(L2);
+rotate(L, [H|T], N, _Sign) ->
+    rotate([H] ++ L, T, N-1, _Sign).
 
 %% =========
 %% Problem#20 (Remove the K'th element from a list.)
