@@ -3,8 +3,8 @@
 
 Solution (written in Erlang) to 99 Problems given on "https://sites.google.com/site/prologsite/prolog-problems".
 
-1_lists      : https://sites.google.com/site/prologsite/prolog-problems/1
-2_arithmetic : https://sites.google.com/site/prologsite/prolog-problems/2
+1. lists      : https://sites.google.com/site/prologsite/prolog-problems/1
+2. arithmetic : https://sites.google.com/site/prologsite/prolog-problems/2
 
 Notes:
 
