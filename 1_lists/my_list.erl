@@ -3,14 +3,14 @@
 
 %% =========
 %% Problem#1 (Find the last element of a list.)
-last([H|[]]) ->
+last([H]) ->
     H;
 last([_|T]) ->
     last(T).
 
 %% =========
 %% Problem#2 (Find the last but one element of a list.)
-second_last([H1, _|[]]) ->
+second_last([H1, _]) ->
     H1;
 second_last([_|T]) ->
     second_last(T).
