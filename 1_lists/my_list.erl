@@ -281,10 +281,10 @@ random_permute(L1, L2) ->
 
 %% =========
 %% Problem#26 (Generate the combinations of K distinct objects chosen from the N elements of a list.)
-combination([{CL, RL} | T], N) when N > 0 -> 
-    combination(create_comb([{CL, RL}|T], []), N-1);
 combination(L, 0) ->
     extract(L);
+combination([{CL, RL} | T], N) -> 
+    combination(create_comb([{CL, RL}|T], []), N-1);
 combination(L, N) ->
     combination([{[], L}], N).
 
@@ -292,7 +292,7 @@ create_comb([], L2) ->
     L2;
 create_comb([{ComLst, RmnLst} | T], L2) ->
     create_comb(T, create_comb({ComLst, RmnLst}) ++ L2).
-% Create list form individual item.
+% Create list from individual item.
 create_comb({ComLst, RmnLst}) ->
     create_comb({ComLst, RmnLst}, [], list_length(RmnLst)).
 create_comb({ComLst, RmnLst}, L2, N) when N > 0 ->  
